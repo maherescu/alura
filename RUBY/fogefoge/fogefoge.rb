@@ -34,23 +34,47 @@ end
 def posicao_valida?(mapa, posicao)
     linhas = mapa.size
     colunas = mapa[0].size
-    estourou_linhas = posicao[0] < 0 || posicao[0] >= mapa.size
+
+    estourou_linhas = posicao[0] < 0 || posicao[0] >= linhas
     estourou_colunas = posicao[1] < 0 || posicao[1] >= colunas
 
     if estourou_linhas || estourou_colunas
         return false
     end
-    if mapa[posicao[0]][posicao[1]] == "X"
+    valor_local = mapa[posicao[0]][posicao[1]]
+    if valor_local == "X" || valor_local == "F"
         return false
     end
     true
 end
 
+def posicoes_validas_a_partir_de(mapa, posicao)
+    posicoes = []
+    baixo = [posicao[0] + 1, posicao[1]]
+    if posicao_valida? mapa, baixo
+        posicoes << baixo
+    end
+    direita = [posicao[0], posicao[1] + 1]
+    if posicao_valida? mapa, direita
+        posicoes << direita
+    end
+    cima = [posicao[0] - 1, posicao[1]]
+    if posicao_valida? mapa, cima
+        posicoes << cima
+    end
+    esquerda = [posicao[0], posicao[1] - 1]
+    if posicao_valida? mapa, esquerda
+        posicoes << esquerda
+    end
+    posicoes
+end
+
 def move_fantasma(mapa, linha, coluna)
+    posicoes = posicoes_validas_a_partir_de mapa, [linha, coluna]
+    return if posicoes.empty?
+    posicao = posicoes[0]
     mapa[linha][coluna] = " "
-    linha += 0
-    coluna += 1
-    mapa[linha][coluna] = "F"
+    mapa[posicao[0]][posicao[1]] = "F"
 end
 
 def move_fantasmas(mapa)
