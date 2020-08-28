@@ -16,3 +16,7 @@ def pede_movimento
     movimento = gets.strip
 end
 
+def game_over
+    puts "\nVocê perdeu!\n"
+end
+
